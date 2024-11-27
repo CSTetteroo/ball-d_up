@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -9,10 +8,10 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed;
     public float jumpForce;
     public float groundDrag;
+    public float airDrag;
     public float airMultiplier;
-    bool readyToJump = true;
-    public float JumpCooldown;
-    public Vector3 delta;
+    bool readyToJump = true; // Initialize to true
+    public float jumpCooldown;
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
@@ -21,8 +20,6 @@ public class PlayerMovement : MonoBehaviour
     public float playerHeight;
     public LayerMask whatIsGround;
     bool isGrounded;
-
-
 
     public Transform orientation;
 
@@ -51,14 +48,12 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            rb.drag = 0;
+            rb.drag = airDrag; // Apply air drag when not grounded
         }
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
-   
         Move();
     }
 
@@ -73,47 +68,33 @@ public class PlayerMovement : MonoBehaviour
             readyToJump = false;
             Jump();
 
-            Invoke(nameof(ResetJump), JumpCooldown);
+            Invoke(nameof(ResetJump), jumpCooldown);
         }
     }
 
     public void Move()
     {
-        if (horizontalInput != 0 || verticalInput != 0)
-        {
-            moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
-            delta = moveDirection.normalized * moveSpeed;
+        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-            if (isGrounded)
-            {
-                delta = moveDirection.normalized * moveSpeed;
-            }
-            else
-            {
-                delta = moveDirection.normalized * moveSpeed * airMultiplier;
-            }
+        if (isGrounded)
+        {
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
         }
         else
         {
-            delta = Vector3.zero; // Set delta to zero when no input is detected
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
         }
-
-        rb.velocity = delta;
     }
 
     public void Jump()
     {
         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-        if (isGrounded)
-        {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            Debug.Log("Jumped");
-        }
+        rb.AddForce(Vector3.up * jumpForce * 10f, ForceMode.Impulse);
+        Debug.Log("Jumped");
     }
 
     public void ResetJump()
     {
         readyToJump = true;
     }
-
 }
