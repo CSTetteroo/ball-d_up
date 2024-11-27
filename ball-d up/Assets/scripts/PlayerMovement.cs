@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -11,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     public float airMultiplier;
     bool readyToJump = true;
     public float JumpCooldown;
+    public Vector3 delta;
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
@@ -56,6 +58,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+   
         Move();
     }
 
@@ -76,18 +79,30 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move()
     {
-        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
-        rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
-
-        if (isGrounded)
+        if(horizontalInput
+            != 0 || verticalInput != 0)
         {
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
-        }
+            moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+            delta = moveDirection.normalized * moveSpeed * 10f;
 
-        if (!isGrounded)
-        {
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+
+            if (isGrounded)
+            {
+                delta
+                    = moveDirection.normalized * moveSpeed * 10f;
+            }
+
+            if (!isGrounded)
+            {
+                delta = moveDirection.normalized * moveSpeed * 10f * airMultiplier;
+            }
         }
+        else
+        {
+            delta -= new Vector3(.1f, delta.y, .1f) * 0.5f;
+        }
+      
+        rb.velocity = delta;
     }
 
     public void Jump()
