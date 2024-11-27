@@ -37,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
         rb.freezeRotation = true;
     }
 
+    //UPDATE-----------------------------------------------------------------------------------------------------------
     void Update()
     {
         isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight / 2 + 0.1f, whatIsGround);
@@ -48,15 +49,9 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            rb.drag = airDrag; // Apply air drag when not grounded
+            rb.drag = airDrag;
         }
     }
-
-    void FixedUpdate()
-    {
-        Move();
-    }
-
     public void MyInput()
     {
         horizontalInput = Input.GetAxis("Horizontal");
@@ -71,7 +66,25 @@ public class PlayerMovement : MonoBehaviour
             Invoke(nameof(ResetJump), jumpCooldown);
         }
     }
+    public void Jump()
+    {
+        rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        rb.AddForce(Vector3.up * jumpForce * 10f, ForceMode.Impulse);
+        Debug.Log("Jumped");
+    }
 
+    public void ResetJump()
+    {
+        readyToJump = true;
+    }
+    //-----------------------------------------------------------------------------------------------------------
+
+
+    //FIXED UPDATE-----------------------------------------------------------------------------------------------------------
+    void FixedUpdate()
+    {
+        Move();
+    }
     public void Move()
     {
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
@@ -85,16 +98,9 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
         }
     }
+    //-----------------------------------------------------------------------------------------------------------
 
-    public void Jump()
-    {
-        rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-        rb.AddForce(Vector3.up * jumpForce * 10f, ForceMode.Impulse);
-        Debug.Log("Jumped");
-    }
 
-    public void ResetJump()
-    {
-        readyToJump = true;
-    }
+
+
 }
