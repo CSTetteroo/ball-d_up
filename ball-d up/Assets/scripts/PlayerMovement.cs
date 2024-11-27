@@ -79,29 +79,25 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move()
     {
-        if(horizontalInput
-            != 0 || verticalInput != 0)
+        if (horizontalInput != 0 || verticalInput != 0)
         {
             moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
-            delta = moveDirection.normalized * moveSpeed * 10f;
-
+            delta = moveDirection.normalized * moveSpeed;
 
             if (isGrounded)
             {
-                delta
-                    = moveDirection.normalized * moveSpeed * 10f;
+                delta = moveDirection.normalized * moveSpeed;
             }
-
-            if (!isGrounded)
+            else
             {
-                delta = moveDirection.normalized * moveSpeed * 10f * airMultiplier;
+                delta = moveDirection.normalized * moveSpeed * airMultiplier;
             }
         }
         else
         {
-            delta -= new Vector3(.1f, delta.y, .1f) * 0.5f;
+            delta = Vector3.zero; // Set delta to zero when no input is detected
         }
-      
+
         rb.velocity = delta;
     }
 
