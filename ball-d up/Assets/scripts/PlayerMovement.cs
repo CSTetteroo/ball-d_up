@@ -12,9 +12,19 @@ public class PlayerMovement : MonoBehaviour
     public float airMultiplier;
     bool readyToJump = true; // Initialize to true
     public float jumpCooldown;
+    public float rollSpeed;
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
+    public KeyCode forwardKey = KeyCode.W;
+    public KeyCode leftKey = KeyCode.A;
+    public KeyCode backKey = KeyCode.S;
+    public KeyCode rightKey = KeyCode.D;
+
+    [Header("SFX")]
+    public AudioSource jumpSFX;
+    public AudioSource landSFX;
+    public AudioClip jumpClip; // Add this line to declare an AudioClip
 
     [Header("Ground Check")]
     public float playerHeight;
@@ -36,6 +46,12 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Freeze only X and Z rotation
+
+        // Assign the AudioClip to the AudioSource
+        if (jumpSFX != null && jumpClip != null)
+        {
+            jumpSFX.clip = jumpClip;
+        }
     }
 
     //UPDATE-----------------------------------------------------------------------------------------------------------
@@ -97,6 +113,10 @@ public class PlayerMovement : MonoBehaviour
 
     public void Jump()
     {
+        if (jumpSFX != null)
+        {
+            jumpSFX.Play();
+        }
         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
         rb.AddForce(Vector3.up * jumpForce * 10f, ForceMode.Impulse);
         Debug.Log("Jumped");
@@ -133,7 +153,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (rb.velocity != Vector3.zero)
         {
-            float rotationSpeed = rb.velocity.magnitude * 10f; // Adjust the multiplier as needed
+            float rotationSpeed = rb.velocity.magnitude * rollSpeed * 10; // Adjust the multiplier as needed
             Vector3 rotationAxis = Vector3.Cross(Vector3.up, rb.velocity.normalized);
             playerObj.Rotate(rotationAxis, rotationSpeed * Time.deltaTime, Space.World);
         }
