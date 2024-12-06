@@ -22,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     bool isGrounded;
 
     public Transform orientation;
+    public Transform playerObj; // Reference to the PlayerObj
 
     float horizontalInput;
     float verticalInput;
@@ -34,13 +35,13 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Freeze only X and Z rotation
     }
 
     //UPDATE-----------------------------------------------------------------------------------------------------------
     void Update()
     {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight / 2 + 0.1f, whatIsGround);
+        GroundCheck();
         MyInput();
 
         if (isGrounded)
@@ -51,7 +52,34 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.drag = airDrag;
         }
+
+        // Visual rotation
+        RotateBall();
     }
+
+    void GroundCheck()
+    {
+        // Perform multiple raycasts to check if the player is grounded
+        Vector3[] raycastOrigins = new Vector3[]
+        {
+            transform.position,
+            transform.position + new Vector3(playerHeight / 2, 0, 0),
+            transform.position - new Vector3(playerHeight / 2, 0, 0),
+            transform.position + new Vector3(0, 0, playerHeight / 2),
+            transform.position - new Vector3(0, 0, playerHeight / 2)
+        };
+
+        isGrounded = false;
+        foreach (var origin in raycastOrigins)
+        {
+            if (Physics.Raycast(origin, Vector3.down, playerHeight / 2 + 0.1f, whatIsGround))
+            {
+                isGrounded = true;
+                break;
+            }
+        }
+    }
+
     public void MyInput()
     {
         horizontalInput = Input.GetAxis("Horizontal");
@@ -66,6 +94,7 @@ public class PlayerMovement : MonoBehaviour
             Invoke(nameof(ResetJump), jumpCooldown);
         }
     }
+
     public void Jump()
     {
         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
@@ -85,6 +114,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Move();
     }
+
     public void Move()
     {
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
@@ -98,9 +128,15 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
         }
     }
+
+    void RotateBall()
+    {
+        if (rb.velocity != Vector3.zero)
+        {
+            float rotationSpeed = rb.velocity.magnitude * 10f; // Adjust the multiplier as needed
+            Vector3 rotationAxis = Vector3.Cross(Vector3.up, rb.velocity.normalized);
+            playerObj.Rotate(rotationAxis, rotationSpeed * Time.deltaTime, Space.World);
+        }
+    }
     //-----------------------------------------------------------------------------------------------------------
-
-
-
-
 }
