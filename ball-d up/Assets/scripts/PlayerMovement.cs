@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode leftKey = KeyCode.A;
     public KeyCode backKey = KeyCode.S;
     public KeyCode rightKey = KeyCode.D;
+    public KeyCode pauseKey = KeyCode.Escape;
 
     [Header("SFX")]
     public AudioSource jumpSFX;
@@ -40,6 +42,8 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveDirection;
 
     Rigidbody rb;
+
+    public Button RestartButton;
 
     // Start is called before the first frame update
     void Start()
@@ -108,6 +112,22 @@ public class PlayerMovement : MonoBehaviour
             Jump();
 
             Invoke(nameof(ResetJump), jumpCooldown);
+        }
+
+        if (Input.GetKeyDown(pauseKey))
+        {
+            if (RestartButton.gameObject.activeSelf)
+            {
+                RestartButton.gameObject.SetActive(false);
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                RestartButton.gameObject.SetActive(true);
+            }
         }
     }
 
