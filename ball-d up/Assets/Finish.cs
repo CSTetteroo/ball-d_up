@@ -24,7 +24,9 @@ public class Finish : MonoBehaviour
     // This function is called when the player collides with the finish line
     void OnTriggerEnter(Collider other)
     {
-            WinButton.gameObject.SetActive(true);
-            Debug.Log("You win!");
+        // Turn on the Win button
+        WinButton.gameObject.SetActive(true);
+        // Log a message to the console bc i needed to check if the trigger worked
+        Debug.Log("You win!");
     }
 }

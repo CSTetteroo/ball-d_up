@@ -8614,7 +8614,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 603835953}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.24192214, y: 0, z: 0, w: 0.97029567}
+  m_LocalRotation: {x: 0.24192213, y: 0, z: 0, w: 0.97029567}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -25654,8 +25654,8 @@ Transform:
   m_GameObject: {fileID: 1679043730}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 54.8, y: -0.58, z: 175.1}
-  m_LocalScale: {x: 234.21056, y: 1, z: 219.90848}
+  m_LocalPosition: {x: 52.2256, y: -0.58, z: 180.4824}
+  m_LocalScale: {x: 158.75874, y: 1, z: 101.40712}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1401740336}
@@ -26864,6 +26864,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ddb44c55e7c42142a8df12b511daead, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DeathButton: {fileID: 1198141534}
 --- !u!65 &1744150404
 BoxCollider:
   m_ObjectHideFlags: 0

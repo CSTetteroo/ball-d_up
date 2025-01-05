@@ -20,7 +20,9 @@ public class death : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
+        // Turn on the Death button
         DeathButton.gameObject.SetActive(true);
+        // Log a message to the console bc i needed to check if the trigger worked
         Debug.Log("You die!");
     }
 }

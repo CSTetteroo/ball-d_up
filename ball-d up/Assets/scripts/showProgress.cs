@@ -10,6 +10,7 @@ public class showProgress : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Show the player's progress in the game
         progressText.text = "Progress: " + player.position.y.ToString("0");
     }
 }

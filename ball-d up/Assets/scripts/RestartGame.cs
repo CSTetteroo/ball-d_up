@@ -22,7 +22,9 @@ public class RestartGame : MonoBehaviour
 
     public void ResetTheGame()
     {
+        // Reset the scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        // Turn off the Restart button
         RestartButton.gameObject.SetActive(false);
     }
 }
