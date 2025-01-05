@@ -12,15 +12,15 @@ public class ThirdPersonCam : MonoBehaviour
 
     public float rotationSpeed; // Speed of rotation for the playerObj
 
-    // Start is called before the first frame update
+
     void Start()
     {
-        // Lock the cursor to the center of the screen and make it invisible
+        // Make cursor invis
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         // Calculate the view direction based on the player's position and the camera's position
@@ -28,7 +28,7 @@ public class ThirdPersonCam : MonoBehaviour
         // Set the orientation's forward direction to the view direction
         orientation.forward = viewDirection.normalized;
 
-        // Get input from the horizontal and vertical axes
+        // Gte input
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
         // Calculate the input direction based on the orientation and input values
